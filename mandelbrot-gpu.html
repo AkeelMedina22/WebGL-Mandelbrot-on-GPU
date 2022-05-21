@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <body style="background-color:black;"></body>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+    <title>Mandelbrot Set</title>
+
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+#version 300 es
+
+    in vec4 vPosition;
+    out float ci;
+    out float cr;
+    uniform float iter;
+    out float nt;
+    void main()
+    {
+      float a = -2.0, b = 2.0, p = -1.0, q = 1.0;
+      
+      // We are passed the values of c from the javascript code,
+      // which is mapped from -1 to 1.
+      // This works for the vertex position, but to determine the colors
+      // accurately, we must remap to -2 to 2.
+
+      cr = float(vPosition[0]);
+      ci = float(vPosition[1]);
+
+	    gl_Position = vec4(cr, ci, vPosition[2], vPosition[3]);
+
+      cr = (a + (float(b - a) / (float(q - p)) * float(cr - p)));
+      ci = (a + (float(b - a) / (float(q - p)) * float(ci - p)));
+
+	    gl_PointSize = 1.0;
+      nt = iter;
+    }
+    </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+#version 300 es
+      precision highp float;
+      out vec4 fragColor;
+      in float ci;
+      in float cr;
+      in float nt;
+
+      
+      void main()
+      {
+        float r;
+        float g;
+        float b;
+        float zr;
+        float zi;
+        float v;
+        int itercount;
+        int iterations;
+        bool escaped = true;
+
+        zr = 0.0;
+        zi = 0.0;
+        r = 0.0;
+        g = 0.0;
+        b = 0.0;
+        v = 0.0;
+        itercount = 0;
+        iterations = 0;
+         
+        // This code is the same as in the CPU version, converted to GLSL.
+        for (int i = 0; i < int(nt); i++)
+        {
+          float temp1 = zr;
+          float temp2 = zi;
+          zr = temp1*temp1 - temp2*temp2 + cr;
+          zi = 2.0*temp1*temp2 + ci;
+          v = sqrt(zr*zr+zi*zi);
+
+          if (v <= 2.0)
+          {
+            itercount+=1;
+          }
+          iterations+=1;
+        }
+
+        if (v <= 2.0)
+        {
+          escaped = false;
+        }
+
+        if (escaped == false)
+        {
+          b = (float(itercount)/float(iterations));
+        }
+        else
+        {
+          r = (float(itercount)/float(iterations));
+        }
+
+	      fragColor = vec4(r, float(itercount)/float(iterations), b, 1.0);
+      }
+      
+    </script>
+
+
+    <script src="http://interactivecomputergraphics.com/8E/Code%20update/Common/initShadersES6.js"></script>
+    <script src="http://interactivecomputergraphics.com/8E/Code%20update/Common/MVES6.js"></script>
+
+    <script type="text/javascript" src="mandelbrot-gpu.js"></script>
+    <script src="https://unpkg.com/mathjs@9.5.0/lib/browser/math.js"></script>
+    <script type="text/javascript" src="helpers.js"></script>
+  </head>
+
+  <body>
+    <center>
+
+    <canvas id="gl-canvas" width="650" height="650">
+      <!-- Oops ... your browser 7oesn't support the HTML5 canvas element -->
+    </canvas>
+    <br>
+    <input type="range" min="1.0" max="50.0" value="20.0" class="slider" step="1.0" id="myRange">  
+  </center>
+  </body>
+</html>
