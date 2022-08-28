@@ -82,21 +82,10 @@
           iterations+=1;
         }
 
-        if (v <= 2.0)
-        {
-          escaped = false;
-        }
+        r = float(itercount)/float(iterations)*3.0;
+        b = float(itercount)/float(iterations)*1.2;
 
-        if (escaped == false)
-        {
-          b = (float(itercount)/float(iterations));
-        }
-        else
-        {
-          r = (float(itercount)/float(iterations));
-        }
-
-	      fragColor = vec4(r, float(itercount)/float(iterations), b, 1.0);
+	      fragColor = vec4(r, 0.0, b, 1.0);
       }
       
     </script>
@@ -117,7 +106,7 @@
       <!-- Oops ... your browser 7oesn't support the HTML5 canvas element -->
     </canvas>
     <br>
-    <input type="range" min="1.0" max="50.0" value="20.0" class="slider" step="1.0" id="myRange">  
+    <input type="range" min="1.0" max="150.0" value="50.0" class="slider" step="1.0" id="myRange">  
   </center>
   </body>
 </html>

@@ -20,22 +20,13 @@ window.onload = function init()
     // Compute data.
     let vertices = [];
 
-    // Number of Pixels.
-    pixellen = canvas.height * canvas.width;
-
-    for (var i = 0; i < canvas.height; i++)
-    {
-        // Mapping of each pixel to relevant point from -2 to 2, where mandelbrot occurs.
-        var x = map_point(0, canvas.height, -2, 2, i);
-        
-        for (var j = 0; j < canvas.width; j++)
-        {
-            var y = map_point(0, canvas.width, -2, 2, j);
-
-            // Our canvas only takes from -1 to 1, so we map each point previously mapped
-            vertices.push(vec2(map_point(-2, 2, -1, 1, x), map_point(-2, 2, -1, 1, y)));
-        }
-    }
+    // Quad
+    vertices.push(vec2(-1, 1));
+    vertices.push(vec2(-1, -1));
+    vertices.push(vec2(1, -1));
+    vertices.push(vec2(-1, 1));
+    vertices.push(vec2(1, -1));
+    vertices.push(vec2(1, 1));
     
     // Load the data into the GPU and bind to shader variables.
     gl.bindBuffer( gl.ARRAY_BUFFER, gl.createBuffer() );
@@ -48,7 +39,7 @@ window.onload = function init()
     
     var locationOfnt = gl.getUniformLocation(program, "iter");
     gl.useProgram(program);
-    gl.uniform1f(locationOfnt, 20.0);
+    gl.uniform1f(locationOfnt, 50.0);
 
     document.getElementById("myRange").oninput = function() 
     {
@@ -61,7 +52,7 @@ window.onload = function init()
 
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT );
-    gl.drawArrays( gl.POINTS, 0, pixellen );
+    gl.drawArrays( gl.TRIANGLES, 0, 6 );
 
 }
 
