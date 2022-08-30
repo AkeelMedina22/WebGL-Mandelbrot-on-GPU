@@ -1,9 +1,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This is a question from CS 440 Computer Graphics offered at Habib University in Fall 2021.
-
-Rendering Mandelbrot using WebGL is much simpler when simply passing calculated colors to the fragment shader. To do the majority of calculation directly via the fragment shader, using GLSL, was the goal of this question.
+Doing the Mandelbrot calculation directly via the fragment shader was the goal of this project. Attention was also paid to how efficient it could be. In the future I will add a zoom feature.
 
 ### Built With
 
